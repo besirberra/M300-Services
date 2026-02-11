@@ -35,6 +35,9 @@ Das Repository wurde erfolgreich erstellt.
 
 ---
 
+## Repository clonen
+![alt text](images/Bild2.png)
+
 ## SSH-Key erstellen
 
 Zur sicheren Verbindung zwischen lokalem PC und GitHub wurde ein SSH-Key generiert.
@@ -132,6 +135,7 @@ nothing to commit, working tree clean
 ## Installation
 
 VirtualBox wurde von der offiziellen Webseite heruntergeladen und installiert.
+![alt text](images/Bild4.png)
 
 ---
 
@@ -246,41 +250,6 @@ In der settings.json wurde folgender Abschnitt ergänzt:
   "**/.vagrant": true,
   "**/.DS_Store": true
 }
-```
-
----
-
-# Bilder in Markdown einfügen
-
-## Ordnerstruktur
-
-```
-M300-Services/
-│
-├── Doku.md
-└── images/
-```
-
-## Bild einfügen
-
-```markdown
-![Beschreibung](images/bildname.png)
-```
-
-Beispiel:
-
-```markdown
-![VirtualBox Übersicht](images/virtualbox.png)
-```
-
----
-
-## Bilder pushen
-
-```bash
-git add -A
-git commit -m "Screenshots ergänzt"
-git push
 ```
 
 ---
