@@ -2,9 +2,7 @@
 
 ---
 
-# 01 – GitHub Account
-
-## 1.1 GitHub Account erstellen
+## GitHub Account erstellen
 
 Zunächst wurde ein GitHub-Account unter folgender Webseite erstellt:
 
@@ -20,7 +18,7 @@ Nach der Registrierung wurde die E-Mail-Adresse bestätigt und die Anmeldung erf
 
 ---
 
-## 1.2 Repository erstellen
+## Repository erstellen
 
 Nach der Anmeldung wurde ein neues Repository erstellt.
 
@@ -37,14 +35,14 @@ Das Repository wurde erfolgreich erstellt.
 
 ---
 
-## 1.3 SSH-Key erstellen
+## SSH-Key erstellen
 
 Zur sicheren Verbindung zwischen lokalem PC und GitHub wurde ein SSH-Key generiert.
 
 Terminal (Git Bash) öffnen und folgenden Befehl ausführen:
 
 ```bash
-ssh-keygen -t rsa -b 4096 -C "meine-email@example.com"
+ssh-keygen -t rsa -b 4096 -C "besirberra@icloud.com" 
 ```
 
 Standard-Datei mit Enter bestätigen:
@@ -57,7 +55,7 @@ Passphrase setzen und bestätigen.
 
 ---
 
-## 1.4 SSH-Key zu GitHub hinzufügen
+## SSH-Key zu GitHub hinzufügen
 
 Public Key anzeigen:
 
@@ -75,9 +73,9 @@ Die SSH-Verbindung ist nun aktiv.
 
 ---
 
-# 02 – Git Client
+# – Git Client
 
-## 2.1 Installation
+## Installation
 
 Git wurde unter folgender Webseite heruntergeladen und installiert:
 
@@ -87,25 +85,25 @@ Installation erfolgte mit Standard-Einstellungen.
 
 ---
 
-## 2.2 Git konfigurieren
+## Git konfigurieren
 
 Terminal (Git Bash) öffnen:
 
 ```bash
-git config --global user.name "MeinUsername"
-git config --global user.email "meine-email@example.com"
+git config --global user.name "besirberra"
+git config --global user.email "besirberra@icloud.com"
 ```
 
 Konfiguration erfolgreich abgeschlossen.
 
 ---
 
-## 2.3 Repository klonen
+## Repository klonen
 
 Repository mit SSH klonen:
 
 ```bash
-git clone git@github.com:MeinUsername/M300-Services.git
+git clone git@github.com:besirberra/M300-Services.git
 ```
 
 In das Repository wechseln:
@@ -129,15 +127,15 @@ nothing to commit, working tree clean
 
 ---
 
-# 03 – VirtualBox
+# – VirtualBox
 
-## 3.1 Installation
+## Installation
 
 VirtualBox wurde von der offiziellen Webseite heruntergeladen und installiert.
 
 ---
 
-## 3.2 Virtuelle Maschine erstellen
+## Virtuelle Maschine erstellen
 
 Neue VM mit folgenden Einstellungen erstellt:
 
@@ -154,7 +152,7 @@ Ubuntu ISO eingebunden und Betriebssystem erfolgreich installiert.
 
 ---
 
-## 3.3 System aktualisieren
+## System aktualisieren
 
 Nach der Installation:
 
@@ -166,7 +164,7 @@ sudo reboot
 
 ---
 
-## 3.4 Apache Webserver installieren
+## Apache Webserver installieren
 
 ```bash
 sudo apt-get install apache2
@@ -180,9 +178,9 @@ Apache-Standardseite wurde erfolgreich angezeigt.
 
 ---
 
-# 04 – Vagrant
+# – Vagrant
 
-## 4.1 VM erstellen
+## VM erstellen
 
 Im gewünschten Verzeichnis:
 
@@ -203,7 +201,7 @@ Die Verbindung wurde erfolgreich aufgebaut.
 
 ---
 
-## 4.2 Apache automatisiert installieren
+## Apache automatisiert installieren
 
 Im Vagrantfile wurde Provisioning ergänzt.
 
@@ -217,15 +215,15 @@ Apache war erfolgreich erreichbar.
 
 ---
 
-# 05 – Visual Studio Code
+# – Visual Studio Code
 
-## 5.1 Installation
+## Installation
 
 Visual Studio Code wurde installiert.
 
 ---
 
-## 5.2 Extensions installiert
+## Extensions installiert
 
 Folgende Extensions wurden installiert:
 
@@ -236,7 +234,7 @@ Folgende Extensions wurden installiert:
 
 ---
 
-## 5.3 Dateien exkludieren
+## Dateien exkludieren
 
 In der settings.json wurde folgender Abschnitt ergänzt:
 
@@ -284,3 +282,243 @@ git add -A
 git commit -m "Screenshots ergänzt"
 git push
 ```
+
+---
+
+# Theoriefragen – Cloud & Vagrant
+
+## Cloud Computing
+
+### Was versteht man unter Cloud-Computing?
+Cloud-Computing beschreibt die Bereitstellung von IT-Ressourcen (Server, Speicher, Datenbanken, Netzwerke, Software) über das Internet.  
+Ressourcen werden flexibel, skalierbar und bedarfsgerecht genutzt, ohne eigene Hardware betreiben zu müssen.
+
+---
+
+## Infrastructure as a Service (IaaS)
+
+### Was versteht man unter Infrastructure as a Service (IaaS)?
+IaaS ist ein Cloud-Modell, bei dem virtuelle Server, Speicher und Netzwerke als Dienst bereitgestellt werden.  
+Der Kunde verwaltet Betriebssysteme und Anwendungen selbst, während der Anbieter die physische Infrastruktur betreibt.
+
+Beispiele: AWS EC2, Microsoft Azure VM, Google Compute Engine.
+
+---
+
+## Infrastructure as Code (IaC)
+
+### Was ist der Unterschied zur manuellen Installation einer VM?
+Bei der manuellen Installation wird eine VM per GUI eingerichtet und konfiguriert.  
+Bei Infrastructure as Code wird die gesamte Infrastruktur über Konfigurationsdateien automatisiert erstellt.  
+IaC ist reproduzierbar, versionierbar und schneller skalierbar.
+
+---
+
+## Vagrant
+
+### Was wird mit Vagrant erzeugt?
+Mit Vagrant werden automatisiert virtuelle Maschinen erstellt und konfiguriert.
+
+---
+
+### Welche der Aussagen treffen zu?
+
+a) Vagrant ist ein Hypervisor  
+→ Falsch  
+
+b) Vagrant erzeugt virtuelle Maschinen, dabei werden mehrere Hypervisor und Cloud-Umgebungen (z.B. AWS) unterstützt.  
+→ Richtig  
+
+c) Vagrant erzeugt Container  
+→ Falsch  
+
+---
+
+### In welchen Bereich des Cloud-Computings ist Vagrant einzuordnen?
+Vagrant gehört zum Bereich **Infrastructure as Code (IaC)** und unterstützt hauptsächlich IaaS-Umgebungen.
+
+---
+
+### Welche Alternativen zu Vagrant bestehen?
+- Terraform  
+- Ansible  
+- Docker  
+- Kubernetes  
+- VMware vSphere  
+- VirtualBox (direkt genutzt)
+
+---
+
+### Wo speichert Vagrant seine Konfiguration?
+Die Konfiguration wird in der Datei **Vagrantfile** im Projektordner gespeichert.
+
+---
+
+### Was bedeutet die Fehlermeldung  
+"A Vagrant environment or target machine is required to run this command."?
+
+Diese Fehlermeldung bedeutet, dass der Befehl nicht in einem gültigen Vagrant-Projektordner ausgeführt wurde oder keine VM definiert/gestartet ist.
+
+---
+
+### Bei welcher LPI Zertifizierung nützt mir das Vagrant Wissen?
+
+Das Wissen ist besonders hilfreich für:
+
+- LPIC-1 (Linux Administrator Grundlagen)
+- LPIC-2 (Linux Systemadministrator)
+- DevOps-orientierte Prüfungen
+
+Da Virtualisierung, Automatisierung und Infrastrukturverwaltung dort relevante Themen sind.
+
+---
+
+# LB2 – Hands-on: Automatisierung mit Vagrant
+
+## Ziel
+
+Ziel dieser Übung war es, einen Serverdienst automatisiert mit Vagrant bereitzustellen.  
+Ich habe dazu eine neue virtuelle Maschine erstellt und darin die Installation sowie Konfiguration manuell getestet, bevor ich die Befehle in das Vagrantfile übernommen habe.
+
+---
+
+## 1. Neue VM erstellen
+
+Zuerst habe ich ein neues Projektverzeichnis erstellt:
+
+```
+cd C:\Users\besir\M300
+mkdir myVM
+cd myVM
+```
+
+Anschliessend habe ich eine neue Vagrant-Umgebung mit Ubuntu 16.04 (xenial64) initialisiert:
+
+```
+vagrant init ubuntu/xenial64
+vagrant up
+```
+
+Zum Testen habe ich mich in die VM eingeloggt:
+
+```
+vagrant ssh
+```
+
+---
+
+## 2. Auswahl der Serverdienste
+
+Ich habe mich für folgende Dienste entschieden:
+
+- Apache Webserver
+- Webalizer (Webanalyzer)
+
+Webalizer benötigt Apache-Logfiles zur Auswertung, daher musste zuerst Apache installiert werden.
+
+---
+
+## 3. Manuelle Installation in der VM
+
+Zuerst habe ich die Paketquellen aktualisiert:
+
+```
+sudo apt-get update
+```
+
+Danach habe ich Apache installiert:
+
+```
+sudo apt-get install -y apache2
+```
+
+Anschließend habe ich Webalizer installiert:
+
+```
+sudo apt-get install -y webalizer
+```
+
+Wichtig war das Argument `-y`, damit die Installation nicht auf eine manuelle Bestätigung wartet.
+
+Mit dem Befehl `history` habe ich anschliessend meine relevanten Befehle überprüft und in das Vagrantfile übernommen.
+
+---
+
+## 4. Automatisierung im Vagrantfile
+
+Nachdem die manuelle Installation funktionierte, habe ich die Konfiguration in das Vagrantfile übertragen.
+
+### Port-Weiterleitung
+
+```
+config.vm.network "forwarded_port", guest:80, host:8080, auto_correct: true
+```
+
+Damit wird Port 80 der VM auf Port 8080 des Hosts weitergeleitet.
+
+### Synchronisation von Dateien
+
+```
+config.vm.synced_folder ".", "/var/www/html"
+```
+
+So bleiben Dateien auch nach dem Zerstören der VM erhalten.
+
+### Speicherzuweisung
+
+```
+config.vm.provider "virtualbox" do |vb|
+  vb.memory = "512"
+end
+```
+
+---
+
+## 5. Provisionierung (Automatisierte Installation)
+
+Die Installation und Konfiguration wurde über ein Shell-Provisioning umgesetzt:
+
+```
+config.vm.provision "shell", inline: <<-SHELL
+  set -o xtrace
+  sudo apt-get update
+  sudo apt-get -y install apache2 webalizer
+  sudo /etc/cron.daily/webalizer
+
+  # Testdaten erzeugen
+  curl http://localhost/ >/dev/null 2>&1
+  curl http://localhost/ >/dev/null 2>&1
+  curl http://localhost/bad >/dev/null 2>&1
+
+  # Output-Verzeichnis korrigieren
+  sudo sed -i -e"s:/var/www/webalizer:/var/www/html/webalizer:" /etc/webalizer/webalizer.conf
+  sudo mkdir -p /var/www/html/webalizer
+
+  # Logs rotieren und neue Analyse erzeugen
+  sudo logrotate -f /etc/logrotate.d/apache2
+  sudo /etc/cron.daily/webalizer
+SHELL
+```
+
+---
+
+## 6. Sicherheit
+
+Zusätzlich sollte die VM durch eine Firewall abgesichert werden (z.B. UFW).
+
+In grösseren Umgebungen können mehrere Webserver über einen Reverse Proxy zusammengeführt werden, um ein zentrales SSL-Zertifikat zu nutzen.
+
+---
+
+## Fazit
+
+Mit dieser Übung habe ich:
+
+- Eine VM mit Vagrant erstellt
+- Serverdienste manuell getestet
+- Die Installation automatisiert
+- Port-Weiterleitung konfiguriert
+- Persistente Dateispeicherung umgesetzt
+- Fehler analysiert und behoben
+
+Die Bereitstellung erfolgt nun vollständig automatisiert und reproduzierbar über das Vagrantfile.
