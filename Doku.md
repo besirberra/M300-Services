@@ -219,6 +219,8 @@ http://localhost:8080
 
 Apache war erfolgreich erreichbar.
 
+![alt text](images/Bildd.png)
+
 ---
 
 # – Visual Studio Code
@@ -243,9 +245,11 @@ Folgende Extensions wurden installiert:
 ## Dateien exkludieren
 
 In der settings.json wurde folgender Abschnitt ergänzt:
+
 ![alt text](images/Bild7.png)
 
 ## Repository hinzufügen & pushen
+
 ![alt text](images/Bild8.png)
 ---
 
@@ -441,9 +445,11 @@ end
 ## 5. Provisionierung (Automatisierte Installation)
 
 Die Installation und Konfiguration wurde über ein Shell-Provisioning umgesetzt:
+
 ![alt text](images/Bild11.png)
 
 Im Browser eingegeben:
+
 ![alt text](images/Bild12.png)
 
 ---
