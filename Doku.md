@@ -179,6 +179,7 @@ Test im Browser:
 http://127.0.0.1
 
 Apache-Standardseite wurde erfolgreich angezeigt.
+
 ![alt text](images/Bild6.png)
 
 ---
