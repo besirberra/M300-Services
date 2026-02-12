@@ -574,7 +574,7 @@ Aufruf über:
 ```
 http://localhost:8081
 
-![alt text](images/Bild17.png)
+images/Bild17.png
 
 Zusätzliche Funktionen:
 - Übersichtliche Statistik (open / pending / resolved)
