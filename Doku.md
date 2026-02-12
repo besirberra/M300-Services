@@ -474,3 +474,210 @@ Mit dieser Übung habe ich:
 - Fehler analysiert und behoben
 
 Die Bereitstellung erfolgt nun vollständig automatisiert und reproduzierbar über das Vagrantfile.
+
+---
+
+# Mini-Helpdesk (Docker-Projekt)
+
+## Zweck des Projekts
+
+Das Projekt „Mini-Helpdesk“ demonstriert eine containerisierte Webanwendung mit angebundener SQL-Datenbank unter Verwendung von Docker Compose.  
+
+Ziel ist es, folgende Aspekte praktisch umzusetzen:
+
+- Multi-Container-Architektur
+- Container-Kommunikation über internes Netzwerk
+- Port-Konfiguration
+- Persistenz mittels Docker-Volumes
+- Monitoring-Lösung
+- Trennung zwischen Benutzer- und Admin-Ansicht
+- Fehleranalyse und Fehlerbehebung
+
+---
+
+## Projektarchitektur
+
+Die Anwendung besteht aus drei Services:
+
+### 1️ Web-Container
+- PHP 8.2 mit Apache
+- Stellt die Benutzeroberfläche zur Verfügung
+- Erlaubt das Erstellen, Anzeigen und Bearbeiten von Tickets
+- Kommuniziert intern mit dem Datenbank-Container
+
+### 2️ Datenbank-Container
+- MySQL 8.0
+- Speichert alle Ticketdaten
+- Nutzt ein benanntes Volume für persistente Datenspeicherung
+
+### 3️ Monitoring (cAdvisor)
+- Überwacht Container-Ressourcen
+- Zeigt CPU-, RAM-, Netzwerk- und I/O-Werte an
+
+Alle Container sind über ein Docker-Bridge-Netzwerk (`appnet`) miteinander verbunden.
+
+---
+
+## Netzwerk & Ports
+
+| Service     | Interner Port | Host-Port |
+|------------|--------------|----------|
+| Web        | 80           | 8081     |
+| MySQL      | 3306         | 3307     |
+| cAdvisor   | 8080         | 8090     |
+
+---
+
+## Volumes (Host ↔ Container Interaktion)
+
+### Code-Volume
+```
+./web → /var/www/html
+```
+Änderungen im Projektordner werden sofort im Container sichtbar.
+
+### Datenbank-Volume
+```
+dbdata → /var/lib/mysql
+```
+Sorgt für persistente Speicherung der Daten auch nach Neustarts.
+
+---
+
+## Datenbankstruktur
+
+### Tabelle: `tickets`
+
+| Spalte       | Typ |
+|--------------|------|
+| id           | INT (Primärschlüssel, AUTO_INCREMENT) |
+| title        | VARCHAR(120) |
+| description  | TEXT |
+| priority     | ENUM(low, medium, high) |
+| status       | ENUM(open, pending, resolved) |
+| created_at   | TIMESTAMP |
+
+---
+
+## Funktionen der Anwendung
+
+### Benutzeransicht
+- Ticket erstellen
+- Ticketliste anzeigen
+- Detailansicht eines Tickets öffnen
+- Status ändern (open / pending / resolved)
+
+### Helpdesk
+
+Aufruf über:
+
+```
+http://localhost:8081
+
+images/Bild17.png
+
+Zusätzliche Funktionen:
+- Übersichtliche Statistik (open / pending / resolved)
+- Status direkt in der Tabelle ändern
+- Tickets löschen
+- Visuelle Kennzeichnung des Admin-Modus
+
+---
+
+## Monitoring
+
+Das Monitoring wird über **cAdvisor** realisiert.
+
+Erreichbar unter:
+
+```
+http://localhost:8090/containers/
+
+images/Bild18.png
+
+
+cAdvisor zeigt:
+- CPU-Auslastung
+- Speicherverbrauch
+- Netzwerkaktivität
+- Laufzeit der Container
+
+Damit wird das Infrastruktur-Monitoring der Container demonstriert.
+
+---
+
+## Dokumentierter Fehler & Lösung
+
+### Fehler:
+```
+mysqli_sql_exception: Connection refused
+```
+
+### Ursache:
+Der Web-Container versuchte eine Verbindung zur Datenbank aufzubauen, bevor der MySQL-Container vollständig gestartet war.
+
+### Lösung:
+Container wurden neu gestartet und Volumes zurückgesetzt:
+
+```
+docker compose down -v
+docker compose up -d --build
+```
+
+Zusätzlich wurden Containerstatus und Logs überprüft:
+
+```
+docker compose ps
+docker compose logs
+```
+
+---
+
+## ▶ Projekt starten
+
+```
+docker compose up -d --build
+```
+
+Webanwendung:
+```
+http://localhost:8081
+```
+
+Monitoring:
+```
+http://localhost:8090
+```
+
+---
+
+## Projektstruktur
+
+```
+docker-projekt/
+│
+├── docker-compose.yml
+├── web/
+│   ├── Dockerfile
+│   └── index.php
+├── db/
+│   └── init.sql
+└── docs/
+    └── README.md
+```
+
+---
+
+## ✅ Fazit
+
+Das Projekt erfüllt alle definierten Handlungsziele:
+
+- Dienst konfiguriert und deployt
+- Netzwerkverbindung eingerichtet
+- Ports definiert
+- Host-Container-Interaktion mittels Volumes
+- Monitoring-Lösung integriert
+- Fehler dokumentiert und behoben
+- Erweiterte Admin-Funktionalität umgesetzt
+
+Die Anwendung stellt eine vollständige, funktionierende Multi-Container-Umgebung mit Docker dar.
