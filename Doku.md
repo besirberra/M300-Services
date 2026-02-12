@@ -179,6 +179,7 @@ Test im Browser:
 http://127.0.0.1
 
 Apache-Standardseite wurde erfolgreich angezeigt.
+![alt text](images/Bild6.png)
 
 ---
 
@@ -241,17 +242,10 @@ Folgende Extensions wurden installiert:
 ## Dateien exkludieren
 
 In der settings.json wurde folgender Abschnitt ergänzt:
+![alt text](images/Bild7.png)
 
-```json
-"files.exclude": {
-  "**/.git": true,
-  "**/.svn": true,
-  "**/.hg": true,
-  "**/.vagrant": true,
-  "**/.DS_Store": true
-}
-```
-
+## Repository hinzufügen & pushen
+![alt text](images/Bild8.png)
 ---
 
 # Theoriefragen – Cloud & Vagrant
@@ -401,7 +395,7 @@ Danach habe ich Apache installiert:
 sudo apt-get install -y apache2
 ```
 
-Anschließend habe ich Webalizer installiert:
+Anschliessend habe ich Webalizer installiert:
 
 ```
 sudo apt-get install -y webalizer
@@ -446,28 +440,10 @@ end
 ## 5. Provisionierung (Automatisierte Installation)
 
 Die Installation und Konfiguration wurde über ein Shell-Provisioning umgesetzt:
+![alt text](images/Bild11.png)
 
-```
-config.vm.provision "shell", inline: <<-SHELL
-  set -o xtrace
-  sudo apt-get update
-  sudo apt-get -y install apache2 webalizer
-  sudo /etc/cron.daily/webalizer
-
-  # Testdaten erzeugen
-  curl http://localhost/ >/dev/null 2>&1
-  curl http://localhost/ >/dev/null 2>&1
-  curl http://localhost/bad >/dev/null 2>&1
-
-  # Output-Verzeichnis korrigieren
-  sudo sed -i -e"s:/var/www/webalizer:/var/www/html/webalizer:" /etc/webalizer/webalizer.conf
-  sudo mkdir -p /var/www/html/webalizer
-
-  # Logs rotieren und neue Analyse erzeugen
-  sudo logrotate -f /etc/logrotate.d/apache2
-  sudo /etc/cron.daily/webalizer
-SHELL
-```
+Im Browser eingegeben:
+![alt text](images/Bild12.png)
 
 ---
 
