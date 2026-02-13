@@ -184,6 +184,12 @@ Apache-Standardseite wurde erfolgreich angezeigt.
 
 ![alt text](images/Bild6.png)
 
+
+Im Ordner /web die Hauptseite index.html editieren bzw. durch eine andere ersetzen (z.B. HTML5up-Themplate) und das Resultat überprüfen
+
+![alt text](images/BB.png)
+
+
 ---
 
 # – Vagrant
