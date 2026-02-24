@@ -56,29 +56,27 @@
     - [Provisionierung Automatisierte Installation](#provisionierung-automatisierte-installation)
     - [Sicherheit](#sicherheit)
     - [Fazit](#fazit)
-- [Mini-Helpdesk Docker-Projekt](#mini-helpdesk-docker-projekt)
-    - [Zweck des Projekts](#zweck-des-projekts)
-    - [Projektarchitektur](#projektarchitektur)
-        - [️ Web-Container](#%EF%B8%8F-web-container)
-        - [️ Datenbank-Container](#%EF%B8%8F-datenbank-container)
-        - [️ Monitoring cAdvisor](#%EF%B8%8F-monitoring-cadvisor)
-    - [Netzwerk & Ports](#netzwerk--ports)
-    - [Volumes Host ↔ Container Interaktion](#volumes-host--container-interaktion)
+- [M300 – Docker Projekt](#m300--docker-projekt)
+    - [Mini-Helpdesk mit Monitoring](#mini-helpdesk-mit-monitoring)
+    - [Zweck des gewählten Service](#zweck-des-gew%C3%A4hlten-service)
+    - [Aufbau und logische Struktur des Projekts](#aufbau-und-logische-struktur-des-projekts)
+        - [Architekturübersicht](#architektur%C3%BCbersicht)
+    - [Konfiguration der Dienste](#konfiguration-der-dienste)
+        - [Web-Service](#web-service)
+        - [Benutzeroberfläche](#benutzeroberfl%C3%A4che)
+        - [Admin-Ansicht](#admin-ansicht)
+    - [Netzwerkverbindung und Ports](#netzwerkverbindung-und-ports)
+    - [Host-System und Container-Interaktion](#host-system-und-container-interaktion)
         - [Code-Volume](#code-volume)
         - [Datenbank-Volume](#datenbank-volume)
-    - [Datenbankstruktur](#datenbankstruktur)
-        - [Tabelle: tickets](#tabelle-tickets)
-    - [Funktionen der Anwendung](#funktionen-der-anwendung)
-        - [Benutzeransicht](#benutzeransicht)
-        - [Helpdesk](#helpdesk)
-    - [Monitoring](#monitoring)
-    - [Dokumentierter Fehler & Lösung](#dokumentierter-fehler--l%C3%B6sung)
-        - [Fehler:](#fehler)
-        - [Ursache:](#ursache)
-        - [Lösung:](#l%C3%B6sung)
-    - [▶ Projekt starten](#-projekt-starten)
+    - [Monitoring-Lösung](#monitoring-l%C3%B6sung)
+    - [Dokumentierte Fehler und Lösungen](#dokumentierte-fehler-und-l%C3%B6sungen)
+        - [Fehler 1 – MySQL Connection refused](#fehler-1--mysql-connection-refused)
+        - [Fehler 2 – ENUM Status Fehler](#fehler-2--enum-status-fehler)
+        - [Fehler 3 – Zugriff auf Port 3307 im Browser](#fehler-3--zugriff-auf-port-3307-im-browser)
+    - [Erfüllung der Handlungsziele](#erf%C3%BCllung-der-handlungsziele)
     - [Projektstruktur](#projektstruktur)
-    - [✅ Fazit](#-fazit)
+    - [Fazit](#fazit)
 
 <!-- /TOC -->
 ---
@@ -567,187 +565,210 @@ Die Bereitstellung erfolgt nun vollständig automatisiert und reproduzierbar üb
 
 ---
 
-# Mini-Helpdesk (Docker-Projekt)
-
-## Zweck des Projekts
-
-Das Projekt „Mini-Helpdesk“ demonstriert eine containerisierte Webanwendung mit angebundener SQL-Datenbank unter Verwendung von Docker Compose.  
-
-Ziel ist es, folgende Aspekte praktisch umzusetzen:
-
-- Multi-Container-Architektur
-- Container-Kommunikation über internes Netzwerk
-- Port-Konfiguration
-- Persistenz mittels Docker-Volumes
-- Monitoring-Lösung
-- Trennung zwischen Benutzer- und Admin-Ansicht
-- Fehleranalyse und Fehlerbehebung
+# M300 – Docker Projekt  
+## Mini-Helpdesk mit Monitoring
 
 ---
 
-## Projektarchitektur
+## 1. Zweck des gewählten Service
 
-Die Anwendung besteht aus drei Services:
+Der entwickelte Service ist ein webbasiertes Mini-Helpdesk-System zur Verwaltung von IT-Tickets.  
+Benutzer können Tickets erfassen, priorisieren und deren Status verfolgen.  
 
-### 1️ Web-Container
+Zusätzlich existiert eine Admin-Ansicht zur erweiterten Verwaltung der Tickets.  
+Das Projekt demonstriert die Umsetzung einer containerisierten Mehrkomponenten-Architektur mit Docker inklusive Monitoring.
+
+---
+
+## 2. Aufbau und logische Struktur des Projekts
+
+Das Projekt besteht aus drei Containern:
+
+- **Web-Container** (PHP + Apache)
+- **Datenbank-Container** (MySQL)
+- **Monitoring-Container** (cAdvisor)
+
+Alle Container kommunizieren über ein internes Docker-Bridge-Netzwerk.
+
+### Architekturübersicht
+
+Übersicht der laufenden Container:
+
+![Docker Container Übersicht](images/02_docker_ps.png)
+
+
+---
+
+## 3. Konfiguration der Dienste
+
+### Web-Service
+
 - PHP 8.2 mit Apache
-- Stellt die Benutzeroberfläche zur Verfügung
-- Erlaubt das Erstellen, Anzeigen und Bearbeiten von Tickets
-- Kommuniziert intern mit dem Datenbank-Container
+- Verbindung zur Datenbank über Hostname `db`
+- Zugriff über Host-Port `8081`
 
-### 2️ Datenbank-Container
-- MySQL 8.0
-- Speichert alle Ticketdaten
-- Nutzt ein benanntes Volume für persistente Datenspeicherung
+### Benutzeroberfläche
 
-### 3️ Monitoring (cAdvisor)
-- Überwacht Container-Ressourcen
-- Zeigt CPU-, RAM-, Netzwerk- und I/O-Werte an
+Startseite der Anwendung:
 
-Alle Container sind über ein Docker-Bridge-Netzwerk (`appnet`) miteinander verbunden.
+![Web Oberfläche](images/03_web_ui.png)
 
 ---
 
-## Netzwerk & Ports
+### Admin-Ansicht
 
-| Service     | Interner Port | Host-Port |
-|------------|--------------|----------|
-| Web        | 80           | 8081     |
-| MySQL      | 3306         | 3307     |
-| cAdvisor   | 8080         | 8090     |
-
----
-
-## Volumes (Host ↔ Container Interaktion)
-
-### Code-Volume
-```
-./web → /var/www/html
-```
-Änderungen im Projektordner werden sofort im Container sichtbar.
-
-### Datenbank-Volume
-```
-dbdata → /var/lib/mysql
-```
-Sorgt für persistente Speicherung der Daten auch nach Neustarts.
-
----
-
-## Datenbankstruktur
-
-### Tabelle: `tickets`
-
-| Spalte       | Typ |
-|--------------|------|
-| id           | INT (Primärschlüssel, AUTO_INCREMENT) |
-| title        | VARCHAR(120) |
-| description  | TEXT |
-| priority     | ENUM(low, medium, high) |
-| status       | ENUM(open, pending, resolved) |
-| created_at   | TIMESTAMP |
-
----
-
-## Funktionen der Anwendung
-
-### Benutzeransicht
-- Ticket erstellen
-- Ticketliste anzeigen
-- Detailansicht eines Tickets öffnen
-- Status ändern (open / pending / resolved)
-
-### Helpdesk
-
-Aufruf über:
+Die Admin-Ansicht wird über folgende URL aufgerufen:
 
 ```
-http://localhost:8081
-
+http://localhost:8081/?admin=1
 ```
 
-![alt text](images/Bild17.png)
+Zusätzliche Funktionen im Admin-Modus:
 
-Zusätzliche Funktionen:
-- Übersichtliche Statistik (open / pending / resolved)
 - Status direkt in der Tabelle ändern
 - Tickets löschen
-- Visuelle Kennzeichnung des Admin-Modus
+- Statistische Übersicht anzeigen
+- Filter nach Status (open / pending / resolved)
+
+![Admin View](images/04_admin_view.png)
 
 ---
 
-## Monitoring
+## 4. Netzwerkverbindung und Ports
 
-Das Monitoring wird über **cAdvisor** realisiert.
+| Dienst     | Interner Port | Host-Port |
+|------------|--------------|-----------|
+| Web        | 80           | 8081      |
+| MySQL      | 3306         | 3307      |
+| cAdvisor   | 8080         | 8090      |
+
+Der Web-Container greift intern über den Hostnamen `db` auf die Datenbank zu.  
+Die Container befinden sich im selben Docker-Netzwerk (`bridge`).
+
+---
+
+## 5. Host-System und Container-Interaktion
+
+### Code-Volume
+
+```bash
+./web → /var/www/html
+```
+
+Änderungen im lokalen Projektordner werden direkt im Container sichtbar.  
+Ein Rebuild ist für Codeänderungen nicht notwendig.
+
+### Datenbank-Volume
+
+```bash
+dbdata → /var/lib/mysql
+```
+
+Dieses Volume sorgt für persistente Datenspeicherung, auch wenn Container neu gestartet oder gelöscht werden.
+
+---
+
+## 6. Monitoring-Lösung
+
+Zur Überwachung der Container wird **cAdvisor** eingesetzt.
 
 Erreichbar unter:
 
 ```
 http://localhost:8090/containers/
-
 ```
 
-![alt text](images/Bild18.png)
+Monitoring-Übersicht:
 
+![cAdvisor Monitoring](images/05_cadvisor.png)
 
 cAdvisor zeigt:
+
 - CPU-Auslastung
 - Speicherverbrauch
 - Netzwerkaktivität
 - Laufzeit der Container
-
-Damit wird das Infrastruktur-Monitoring der Container demonstriert.
+- Prozesse innerhalb der Container
 
 ---
 
-## Dokumentierter Fehler & Lösung
+## 7. Dokumentierte Fehler und Lösungen
 
-### Fehler:
+### Fehler 1 – MySQL Connection refused
+
+Fehlermeldung:
+
 ```
 mysqli_sql_exception: Connection refused
 ```
 
-### Ursache:
-Der Web-Container versuchte eine Verbindung zur Datenbank aufzubauen, bevor der MySQL-Container vollständig gestartet war.
+Screenshot:
 
-### Lösung:
-Container wurden neu gestartet und Volumes zurückgesetzt:
+![Connection Error](images/06_error_connection.png)
 
-```
+**Ursache:**  
+Der Web-Container versuchte eine Verbindung zur Datenbank aufzubauen, bevor diese vollständig gestartet war.
+
+**Lösung:**
+
+```bash
 docker compose down -v
 docker compose up -d --build
 ```
 
-Zusätzlich wurden Containerstatus und Logs überprüft:
+---
+
+### Fehler 2 – ENUM Status Fehler
+
+Fehlermeldung:
 
 ```
-docker compose ps
-docker compose logs
+Data truncated for column 'status'
 ```
+
+Screenshot:
+
+![Enum Error](images/07_enum_error.png)
+
+**Ursache:**  
+Der Statuswert `closed` war nicht im ENUM definiert.
+
+**Lösung:**  
+Temporäre Erweiterung des ENUM-Feldes, Migration der Werte und anschließende Bereinigung.
 
 ---
 
-## ▶ Projekt starten
+### Fehler 3 – Zugriff auf Port 3307 im Browser
+
+Fehlermeldung:
 
 ```
-docker compose up -d --build
+ERR_INVALID_HTTP_RESPONSE
 ```
 
-Webanwendung:
-```
-http://localhost:8081
-```
-
-Monitoring:
-```
-http://localhost:8090
-```
+**Ursache:**  
+MySQL ist kein HTTP-Dienst und kann nicht direkt im Browser aufgerufen werden.
 
 ---
 
-## Projektstruktur
+## 8. Erfüllung der Handlungsziele
 
-```
+| Handlungsziel | Umsetzung |
+|---------------|-----------|
+| Zweck des Service erklärt | Mini-Helpdesk beschrieben |
+| Aufbau / Struktur dokumentiert | Multi-Container Architektur |
+| Dienst konfiguriert | Web + DB korrekt eingerichtet |
+| Monitoring eingesetzt | cAdvisor integriert |
+| Netzwerk konfiguriert | Ports und internes Netzwerk definiert |
+| Host-Interaktion gezeigt | Volumes verwendet |
+| Fehler dokumentiert | Mehrere Fehler inkl. Lösung beschrieben |
+| Kontext ergänzt | Jede Sektion enthält erklärende Beschreibung |
+
+---
+
+## 9. Projektstruktur
+
+```bash
 docker-projekt/
 │
 ├── docker-compose.yml
@@ -756,22 +777,34 @@ docker-projekt/
 │   └── index.php
 ├── db/
 │   └── init.sql
+├── images/
+│   ├── 01_architektur.png
+│   ├── 02_docker_ps.png
+│   ├── 03_web_ui.png
+│   ├── 04_admin_view.png
+│   ├── 05_cadvisor.png
+│   ├── 06_error_connection.png
+│   └── 07_enum_error.png
 └── docs/
-    └── README.md
+    └── Doku.md
 ```
 
 ---
 
-## ✅ Fazit
+## 10. Fazit
 
-Das Projekt erfüllt alle definierten Handlungsziele:
+Das Projekt demonstriert erfolgreich eine containerisierte Webanwendung mit Datenbank und Monitoring.  
 
-- Dienst konfiguriert und deployt
-- Netzwerkverbindung eingerichtet
-- Ports definiert
-- Host-Container-Interaktion mittels Volumes
-- Monitoring-Lösung integriert
-- Fehler dokumentiert und behoben
-- Erweiterte Admin-Funktionalität umgesetzt
+Alle Handlungsziele wurden vollständig erfüllt.  
 
-Die Anwendung stellt eine vollständige, funktionierende Multi-Container-Umgebung mit Docker dar.
+Die Anwendung ist reproduzierbar über:
+
+```bash
+docker compose up -d --build
+```
+
+Web-Anwendung:  
+http://localhost:8081  
+
+Monitoring:  
+http://localhost:8090
