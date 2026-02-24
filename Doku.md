@@ -594,7 +594,7 @@ Alle Container kommunizieren über ein internes Docker-Bridge-Netzwerk.
 
 Übersicht der laufenden Container:
 
-![Docker Container Übersicht](images/02_docker_ps.png)
+![alt text](images/docker.img.png)
 
 
 ---
@@ -611,7 +611,7 @@ Alle Container kommunizieren über ein internes Docker-Bridge-Netzwerk.
 
 Startseite der Anwendung:
 
-![Web Oberfläche](images/03_web_ui.png)
+![alt text](images/Helpdesk.img.png)
 
 ---
 
