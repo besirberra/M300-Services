@@ -1,10 +1,92 @@
 # M300 – Plattformübergreifende Dienste in ein Netzwerk integrieren
 
 ### Inhaltsverzeichnis
+<!-- TOC -->
 
+- [M300 – Plattformübergreifende Dienste in ein Netzwerk integrieren](#m300--plattform%C3%BCbergreifende-dienste-in-ein-netzwerk-integrieren)
+        - [Inhaltsverzeichnis](#inhaltsverzeichnis)
+- [-Toolumgebung](#-toolumgebung)
+- [GitHub Account erstellen](#github-account-erstellen)
+    - [Repository erstellen](#repository-erstellen)
+    - [Repository clonen](#repository-clonen)
+    - [SSH-Key erstellen](#ssh-key-erstellen)
+    - [SSH-Key zu GitHub hinzufügen](#ssh-key-zu-github-hinzuf%C3%BCgen)
+- [Git Client](#git-client)
+    - [Installation](#installation)
+    - [Git konfigurieren](#git-konfigurieren)
+    - [Repository klonen](#repository-klonen)
+- [VirtualBox](#virtualbox)
+    - [Installation](#installation)
+    - [Virtuelle Maschine erstellen](#virtuelle-maschine-erstellen)
+    - [System aktualisieren](#system-aktualisieren)
+    - [Apache Webserver installieren](#apache-webserver-installieren)
+- [Vagrant](#vagrant)
+    - [VM erstellen](#vm-erstellen)
+    - [Apache automatisiert installieren](#apache-automatisiert-installieren)
+- [Visual Studio Code](#visual-studio-code)
+    - [Installation](#installation)
+    - [Extensions installiert](#extensions-installiert)
+    - [Dateien exkludieren](#dateien-exkludieren)
+    - [Repository hinzufügen & pushen](#repository-hinzuf%C3%BCgen--pushen)
+    - [alt text](#alt-text)
+- [Theoriefragen – Cloud & Vagrant](#theoriefragen--cloud--vagrant)
+    - [Cloud Computing](#cloud-computing)
+        - [Was versteht man unter Cloud-Computing?](#was-versteht-man-unter-cloud-computing)
+    - [Infrastructure as a Service IaaS](#infrastructure-as-a-service-iaas)
+        - [Was versteht man unter Infrastructure as a Service IaaS?](#was-versteht-man-unter-infrastructure-as-a-service-iaas)
+    - [Infrastructure as Code IaC](#infrastructure-as-code-iac)
+        - [Was ist der Unterschied zur manuellen Installation einer VM?](#was-ist-der-unterschied-zur-manuellen-installation-einer-vm)
+    - [Vagrant](#vagrant)
+        - [Was wird mit Vagrant erzeugt?](#was-wird-mit-vagrant-erzeugt)
+        - [Welche der Aussagen treffen zu?](#welche-der-aussagen-treffen-zu)
+        - [In welchen Bereich des Cloud-Computings ist Vagrant einzuordnen?](#in-welchen-bereich-des-cloud-computings-ist-vagrant-einzuordnen)
+        - [Welche Alternativen zu Vagrant bestehen?](#welche-alternativen-zu-vagrant-bestehen)
+        - [Wo speichert Vagrant seine Konfiguration?](#wo-speichert-vagrant-seine-konfiguration)
+        - [Was bedeutet die Fehlermeldung](#was-bedeutet-die-fehlermeldung)
+        - [Bei welcher LPI Zertifizierung nützt mir das Vagrant Wissen?](#bei-welcher-lpi-zertifizierung-n%C3%BCtzt-mir-das-vagrant-wissen)
+- [LB2 – Hands-on: Automatisierung mit Vagrant](#lb2--hands-on-automatisierung-mit-vagrant)
+    - [Ziel](#ziel)
+    - [Neue VM erstellen](#neue-vm-erstellen)
+    - [Auswahl der Serverdienste](#auswahl-der-serverdienste)
+    - [Manuelle Installation in der VM](#manuelle-installation-in-der-vm)
+    - [Automatisierung im Vagrantfile](#automatisierung-im-vagrantfile)
+        - [Port-Weiterleitung](#port-weiterleitung)
+        - [Synchronisation von Dateien](#synchronisation-von-dateien)
+        - [Speicherzuweisung](#speicherzuweisung)
+    - [Provisionierung Automatisierte Installation](#provisionierung-automatisierte-installation)
+    - [Sicherheit](#sicherheit)
+    - [Fazit](#fazit)
+- [Mini-Helpdesk Docker-Projekt](#mini-helpdesk-docker-projekt)
+    - [Zweck des Projekts](#zweck-des-projekts)
+    - [Projektarchitektur](#projektarchitektur)
+        - [️ Web-Container](#%EF%B8%8F-web-container)
+        - [️ Datenbank-Container](#%EF%B8%8F-datenbank-container)
+        - [️ Monitoring cAdvisor](#%EF%B8%8F-monitoring-cadvisor)
+    - [Netzwerk & Ports](#netzwerk--ports)
+    - [Volumes Host ↔ Container Interaktion](#volumes-host--container-interaktion)
+        - [Code-Volume](#code-volume)
+        - [Datenbank-Volume](#datenbank-volume)
+    - [Datenbankstruktur](#datenbankstruktur)
+        - [Tabelle: tickets](#tabelle-tickets)
+    - [Funktionen der Anwendung](#funktionen-der-anwendung)
+        - [Benutzeransicht](#benutzeransicht)
+        - [Helpdesk](#helpdesk)
+    - [Monitoring](#monitoring)
+    - [Dokumentierter Fehler & Lösung](#dokumentierter-fehler--l%C3%B6sung)
+        - [Fehler:](#fehler)
+        - [Ursache:](#ursache)
+        - [Lösung:](#l%C3%B6sung)
+    - [▶ Projekt starten](#-projekt-starten)
+    - [Projektstruktur](#projektstruktur)
+    - [✅ Fazit](#-fazit)
+
+<!-- /TOC -->
 ---
+# 10-Toolumgebung
 
-## GitHub Account erstellen
+--
+
+# 01 GitHub Account erstellen
 
 Zunächst wurde ein GitHub-Account unter folgender Webseite erstellt:
 
@@ -78,7 +160,7 @@ Die SSH-Verbindung ist nun aktiv.
 
 ---
 
-# – Git Client
+# 02 Git Client
 
 ## Installation
 
@@ -132,7 +214,7 @@ nothing to commit, working tree clean
 
 ---
 
-# – VirtualBox
+# 03 VirtualBox
 
 ## Installation
 
@@ -192,7 +274,7 @@ Im Ordner /web die Hauptseite index.html editieren bzw. durch eine andere ersetz
 
 ---
 
-# – Vagrant
+# 04 Vagrant
 
 ## VM erstellen
 
@@ -231,7 +313,7 @@ Apache war erfolgreich erreichbar.
 
 ---
 
-# – Visual Studio Code
+# 05 Visual Studio Code
 
 ## Installation
 
