@@ -72,9 +72,6 @@
     - [Monitoring-Lösung](#monitoring-l%C3%B6sung)
     - [Dokumentierte Fehler und Lösungen](#dokumentierte-fehler-und-l%C3%B6sungen)
         - [Fehler 1 – MySQL Connection refused](#fehler-1--mysql-connection-refused)
-        - [Fehler 2 – ENUM Status Fehler](#fehler-2--enum-status-fehler)
-        - [Fehler 3 – Zugriff auf Port 3307 im Browser](#fehler-3--zugriff-auf-port-3307-im-browser)
-    - [Erfüllung der Handlungsziele](#erf%C3%BCllung-der-handlungsziele)
     - [Projektstruktur](#projektstruktur)
     - [Fazit](#fazit)
 
@@ -630,7 +627,7 @@ Zusätzliche Funktionen im Admin-Modus:
 - Statistische Übersicht anzeigen
 - Filter nach Status (open / pending / resolved)
 
-![Admin View](images/04_admin_view.png)
+![alt text](images/admin.png)
 
 ---
 
@@ -680,7 +677,7 @@ http://localhost:8090/containers/
 
 Monitoring-Übersicht:
 
-![cAdvisor Monitoring](images/05_cadvisor.png)
+![alt text](images/cAdvisor.img.png)
 
 cAdvisor zeigt:
 
@@ -702,10 +699,6 @@ Fehlermeldung:
 mysqli_sql_exception: Connection refused
 ```
 
-Screenshot:
-
-![Connection Error](images/06_error_connection.png)
-
 **Ursache:**  
 Der Web-Container versuchte eine Verbindung zur Datenbank aufzubauen, bevor diese vollständig gestartet war.
 
@@ -715,54 +708,6 @@ Der Web-Container versuchte eine Verbindung zur Datenbank aufzubauen, bevor dies
 docker compose down -v
 docker compose up -d --build
 ```
-
----
-
-### Fehler 2 – ENUM Status Fehler
-
-Fehlermeldung:
-
-```
-Data truncated for column 'status'
-```
-
-Screenshot:
-
-![Enum Error](images/07_enum_error.png)
-
-**Ursache:**  
-Der Statuswert `closed` war nicht im ENUM definiert.
-
-**Lösung:**  
-Temporäre Erweiterung des ENUM-Feldes, Migration der Werte und anschließende Bereinigung.
-
----
-
-### Fehler 3 – Zugriff auf Port 3307 im Browser
-
-Fehlermeldung:
-
-```
-ERR_INVALID_HTTP_RESPONSE
-```
-
-**Ursache:**  
-MySQL ist kein HTTP-Dienst und kann nicht direkt im Browser aufgerufen werden.
-
----
-
-## 8. Erfüllung der Handlungsziele
-
-| Handlungsziel | Umsetzung |
-|---------------|-----------|
-| Zweck des Service erklärt | Mini-Helpdesk beschrieben |
-| Aufbau / Struktur dokumentiert | Multi-Container Architektur |
-| Dienst konfiguriert | Web + DB korrekt eingerichtet |
-| Monitoring eingesetzt | cAdvisor integriert |
-| Netzwerk konfiguriert | Ports und internes Netzwerk definiert |
-| Host-Interaktion gezeigt | Volumes verwendet |
-| Fehler dokumentiert | Mehrere Fehler inkl. Lösung beschrieben |
-| Kontext ergänzt | Jede Sektion enthält erklärende Beschreibung |
 
 ---
 
@@ -777,14 +722,8 @@ docker-projekt/
 │   └── index.php
 ├── db/
 │   └── init.sql
-├── images/
-│   ├── 01_architektur.png
-│   ├── 02_docker_ps.png
-│   ├── 03_web_ui.png
-│   ├── 04_admin_view.png
-│   ├── 05_cadvisor.png
-│   ├── 06_error_connection.png
-│   └── 07_enum_error.png
+├── images/   
+│   
 └── docs/
     └── Doku.md
 ```
