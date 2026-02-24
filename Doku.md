@@ -63,8 +63,10 @@
         - [Architekturübersicht](#architektur%C3%BCbersicht)
     - [Konfiguration der Dienste](#konfiguration-der-dienste)
         - [Web-Service](#web-service)
-        - [Benutzeroberfläche](#benutzeroberfl%C3%A4che)
+        - [Benutzeroberfläche Frontend](#benutzeroberfl%C3%A4che-frontend)
         - [Admin-Ansicht](#admin-ansicht)
+        - [Backend – Datenbankansicht](#backend--datenbankansicht)
+        - [Synchronisation Backend ↔ Frontend](#synchronisation-backend--frontend)
     - [Netzwerkverbindung und Ports](#netzwerkverbindung-und-ports)
     - [Host-System und Container-Interaktion](#host-system-und-container-interaktion)
         - [Code-Volume](#code-volume)
@@ -570,9 +572,11 @@ Die Bereitstellung erfolgt nun vollständig automatisiert und reproduzierbar üb
 ## 1. Zweck des gewählten Service
 
 Der entwickelte Service ist ein webbasiertes Mini-Helpdesk-System zur Verwaltung von IT-Tickets.  
-Benutzer können Tickets erfassen, priorisieren und deren Status verfolgen.  
+Benutzer können Tickets erfassen, priorisieren und deren Status verfolgen.
 
 Zusätzlich existiert eine Admin-Ansicht zur erweiterten Verwaltung der Tickets.  
+Ergänzend wurde ein Backend-Bereich implementiert, der eine vollständige Datenbankansicht der Tabelle `tickets` ermöglicht.
+
 Das Projekt demonstriert die Umsetzung einer containerisierten Mehrkomponenten-Architektur mit Docker inklusive Monitoring.
 
 ---
@@ -585,14 +589,13 @@ Das Projekt besteht aus drei Containern:
 - **Datenbank-Container** (MySQL)
 - **Monitoring-Container** (cAdvisor)
 
-Alle Container kommunizieren über ein internes Docker-Bridge-Netzwerk.
+Alle Container kommunizieren über ein internes Docker-Bridge-Netzwerk (`appnet`).
 
 ### Architekturübersicht
 
 Übersicht der laufenden Container:
 
-![alt text](images/docker.img.png)
-
+![Docker Übersicht](images/docker.img.png)
 
 ---
 
@@ -603,12 +606,23 @@ Alle Container kommunizieren über ein internes Docker-Bridge-Netzwerk.
 - PHP 8.2 mit Apache
 - Verbindung zur Datenbank über Hostname `db`
 - Zugriff über Host-Port `8081`
+- Backend-Zugriff über `/backend.php`
 
-### Benutzeroberfläche
+---
+
+### Benutzeroberfläche (Frontend)
 
 Startseite der Anwendung:
 
-![alt text](images/Helpdesk.img.png)
+![Helpdesk Oberfläche](images/Helpdesk.img.png)
+
+Funktionen:
+
+- Ticket erstellen  
+- Ticket-Details anzeigen  
+- Status aktualisieren  
+- Filter nach Status  
+- Admin-Ansicht aktivierbar  
 
 ---
 
@@ -622,12 +636,42 @@ http://localhost:8081/?admin=1
 
 Zusätzliche Funktionen im Admin-Modus:
 
-- Status direkt in der Tabelle ändern
-- Tickets löschen
-- Statistische Übersicht anzeigen
+- Status direkt in der Tabelle ändern  
+- Tickets löschen  
+- Statistische Übersicht anzeigen  
 - Filter nach Status (open / pending / resolved)
 
-![alt text](images/admin.png)
+![Admin Ansicht](images/admin.png)
+
+---
+
+### Backend – Datenbankansicht
+
+Zusätzlich wurde eine Backend-Seite implementiert:
+
+```
+http://localhost:8081/backend.php
+```
+![alt text](images/backend.png)
+
+Diese Seite zeigt:
+
+- Alle Datensätze der Tabelle `tickets`
+- Alle Spalten (ID, Title, Description, Priority, Status, Created)
+- Filter nach Status
+- Sortierung nach Erstellungsdatum
+- Direkte Statusänderung
+- Löschen von Tickets
+
+### Synchronisation Backend ↔ Frontend
+
+Änderungen, die im Backend vorgenommen werden (z.B. Status ändern oder Ticket löschen),  
+werden direkt in der MySQL-Datenbank gespeichert.
+
+Da sowohl Frontend als auch Backend auf dieselbe Datenbank zugreifen,  
+sind alle Änderungen sofort im Frontend sichtbar.
+
+Es existiert keine separate Datenhaltung – beide Ansichten greifen auf dieselbe Tabelle `tickets` zu.
 
 ---
 
@@ -640,7 +684,7 @@ Zusätzliche Funktionen im Admin-Modus:
 | cAdvisor   | 8080         | 8090      |
 
 Der Web-Container greift intern über den Hostnamen `db` auf die Datenbank zu.  
-Die Container befinden sich im selben Docker-Netzwerk (`bridge`).
+Die Container befinden sich im selben Docker-Netzwerk (`appnet` – bridge).
 
 ---
 
@@ -648,7 +692,7 @@ Die Container befinden sich im selben Docker-Netzwerk (`bridge`).
 
 ### Code-Volume
 
-```bash
+```
 ./web → /var/www/html
 ```
 
@@ -657,7 +701,7 @@ Ein Rebuild ist für Codeänderungen nicht notwendig.
 
 ### Datenbank-Volume
 
-```bash
+```
 dbdata → /var/lib/mysql
 ```
 
@@ -677,15 +721,15 @@ http://localhost:8090/containers/
 
 Monitoring-Übersicht:
 
-![alt text](images/cAdvisor.img.png)
+![cAdvisor Monitoring](images/cAdvisor.img.png)
 
 cAdvisor zeigt:
 
-- CPU-Auslastung
-- Speicherverbrauch
-- Netzwerkaktivität
-- Laufzeit der Container
-- Prozesse innerhalb der Container
+- CPU-Auslastung  
+- Speicherverbrauch  
+- Netzwerkaktivität  
+- Laufzeit der Container  
+- Prozesse innerhalb der Container  
 
 ---
 
@@ -704,25 +748,26 @@ Der Web-Container versuchte eine Verbindung zur Datenbank aufzubauen, bevor dies
 
 **Lösung:**
 
-```bash
+```
 docker compose down -v
 docker compose up -d --build
 ```
 
 ---
 
-## 9. Projektstruktur
+## 8. Projektstruktur
 
-```bash
+```
 docker-projekt/
 │
 ├── docker-compose.yml
 ├── web/
 │   ├── Dockerfile
-│   └── index.php
+│   ├── index.php
+│   └── backend.php
 ├── db/
 │   └── init.sql
-├── images/   
+├── images/
 │   
 └── docs/
     └── Doku.md
@@ -730,20 +775,32 @@ docker-projekt/
 
 ---
 
-## 10. Fazit
+## 9. Fazit
 
-Das Projekt demonstriert erfolgreich eine containerisierte Webanwendung mit Datenbank und Monitoring.  
+Das Projekt demonstriert erfolgreich eine containerisierte Webanwendung mit Datenbank und Monitoring.
 
-Alle Handlungsziele wurden vollständig erfüllt.  
+Es beinhaltet:
+
+- Multi-Container Architektur  
+- Persistente Datenhaltung  
+- Backend-Datenbankansicht  
+- Admin-Funktionen  
+- Monitoring mit cAdvisor  
+- Dokumentierte Fehlerbehebung  
+
+Alle Handlungsziele wurden vollständig erfüllt.
 
 Die Anwendung ist reproduzierbar über:
 
-```bash
+```
 docker compose up -d --build
 ```
 
 Web-Anwendung:  
 http://localhost:8081  
 
+Backend:  
+http://localhost:8081/backend.php  
+
 Monitoring:  
-http://localhost:8090
+http://localhost:8090  
