@@ -76,6 +76,48 @@
         - [Fehler 1 – MySQL Connection refused](#fehler-1--mysql-connection-refused)
     - [Projektstruktur](#projektstruktur)
     - [Fazit](#fazit)
+- [Theoriefragen – Container & Docker](#theoriefragen--container--docker)
+    - [Container](#container)
+        - [Was ist der Unterschied zwischen Vagrant und Docker?](#was-ist-der-unterschied-zwischen-vagrant-und-docker)
+        - [Was welches Tools aus dem Docker Universum ist vergleichbar mit Vagrant?](#was-welches-tools-aus-dem-docker-universum-ist-vergleichbar-mit-vagrant)
+        - [Was macht der Docker Provisioner von Vagrant?](#was-macht-der-docker-provisioner-von-vagrant)
+        - [Welche Linux Kernel Funktionalität verwenden Container?](#welche-linux-kernel-funktionalit%C3%A4t-verwenden-container)
+        - [Welches Architekturmuster verwendet der Entwickler wenn er Container einsetzt?](#welches-architekturmuster-verwendet-der-entwickler-wenn-er-container-einsetzt)
+        - [Welches sind die drei Hauptmerkmale abgeleitet vom Ur-Unix von Microservices?](#welches-sind-die-drei-hauptmerkmale-abgeleitet-vom-ur-unix-von-microservices)
+    - [Docker](#docker)
+        - [Was ist der Unterschied zwischen einem Docker Image und einem Container?](#was-ist-der-unterschied-zwischen-einem-docker-image-und-einem-container)
+        - [Was ist der Unterschied zwischen einer Virtuellen Maschine und einem Docker Container?](#was-ist-der-unterschied-zwischen-einer-virtuellen-maschine-und-einem-docker-container)
+        - [Wie bekomme ich Informationen zu einem laufenden Docker Container?](#wie-bekomme-ich-informationen-zu-einem-laufenden-docker-container)
+        - [Was ist der Unterschied zwischen einer Docker Registry und einem Repository?](#was-ist-der-unterschied-zwischen-einer-docker-registry-und-einem-repository)
+        - [Wie erstelle ich ein Container Image?](#wie-erstelle-ich-ein-container-image)
+        - [In welcher Datei steht welche Inhalte sich im Container Image befinden?](#in-welcher-datei-steht-welche-inhalte-sich-im-container-image-befinden)
+        - [Der erste Prozess im Container bekommt die Nummer?](#der-erste-prozess-im-container-bekommt-die-nummer)
+        - [Welche Teile von Docker sind durch Kubernetes obsolet geworden, bzw. sollten nicht mehr verwendet werden?](#welche-teile-von-docker-sind-durch-kubernetes-obsolet-geworden-bzw-sollten-nicht-mehr-verwendet-werden)
+        - [Welche Aussage ist besser The Twelve-Factor App?](#welche-aussage-ist-besser-the-twelve-factor-app)
+    - [Docker Hub](#docker-hub)
+        - [Was ist Docker Hub?](#was-ist-docker-hub)
+        - [Welches sind die Alternativen?](#welches-sind-die-alternativen)
+        - [Warum sollte eine eigene Docker Registry im Unternehmen verwendet werden?](#warum-sollte-eine-eigene-docker-registry-im-unternehmen-verwendet-werden)
+        - [Warum sollten Versionen Tags von Images immer angegeben werden?](#warum-sollten-versionen-tags-von-images-immer-angegeben-werden)
+        - [Was ist der Unterschied zwischen docker save/docker load und docker export/docker import?](#was-ist-der-unterschied-zwischen-docker-savedocker-load-und-docker-exportdocker-import)
+- [LB 3 – Docker Hands-on](#lb-3--docker-hands-on)
+    - [Ziel der Aufgabe](#ziel-der-aufgabe)
+- [Docker Umgebung funktionsfähig](#docker-umgebung-funktionsf%C3%A4hig)
+    - [Umgebung](#umgebung)
+    - [VM starten](#vm-starten)
+    - [Docker testen](#docker-testen)
+- [Backend + Frontend kombinieren](#backend--frontend-kombinieren)
+    - [Verwendete Images](#verwendete-images)
+    - [MySQL Container starten](#mysql-container-starten)
+    - [Ghost Container starten](#ghost-container-starten)
+    - [Zugriff im Browser](#zugriff-im-browser)
+- [Eigener Docker Container Apache](#eigener-docker-container-apache)
+    - [Dockerfile](#dockerfile)
+    - [Image bauen](#image-bauen)
+    - [Container starten](#container-starten)
+    - [Port-Weiterleitung prüfen](#port-weiterleitung-pr%C3%BCfen)
+    - [Zugriff im Browser](#zugriff-im-browser)
+- [Fazit](#fazit)
 
 <!-- /TOC -->
 ---
@@ -804,3 +846,326 @@ http://localhost:8081/backend.php
 
 Monitoring:  
 http://localhost:8090  
+
+---
+
+# Theoriefragen – Container & Docker
+
+---
+
+## Container
+
+### Was ist der Unterschied zwischen Vagrant und Docker?
+
+**Antwort:**  
+Vagrant erstellt und verwaltet virtuelle Maschinen (VMs).  
+Docker erstellt und verwaltet Container, die sich den Kernel des Host-Systems teilen.
+
+---
+
+### Was welches Tools aus dem Docker Universum ist vergleichbar mit Vagrant?
+
+**Antwort:**  
+Docker Compose ist am ehesten vergleichbar, da mehrere Services definiert und orchestriert werden können.
+
+---
+
+### Was macht der Docker Provisioner von Vagrant?
+
+**Antwort:**  
+Der Docker Provisioner von Vagrant startet und konfiguriert Docker-Container innerhalb einer VM.
+
+---
+
+### Welche Linux Kernel Funktionalität verwenden Container?
+
+**Antwort:**  
+Container verwenden Linux Namespaces und Control Groups (cgroups).
+
+---
+
+### Welches Architekturmuster verwendet der Entwickler wenn er Container einsetzt?
+
+**Antwort:**  
+Microservices-Architektur.
+
+---
+
+### Welches sind die drei Hauptmerkmale (abgeleitet vom Ur-Unix) von Microservices?
+
+**Antwort:**  
+- Ein Service erfüllt genau eine Aufgabe  
+- Services sind unabhängig voneinander  
+- Kommunikation erfolgt über einfache Schnittstellen (z.B. HTTP/REST)
+
+---
+
+## Docker
+
+### Was ist der Unterschied zwischen einem Docker Image und einem Container?
+
+**Antwort:**  
+Ein Image ist eine Vorlage (Blueprint).  
+Ein Container ist eine laufende Instanz eines Images.
+
+---
+
+### Was ist der Unterschied zwischen einer Virtuellen Maschine und einem Docker Container?
+
+**Antwort:**  
+Eine VM virtualisiert komplette Hardware inkl. eigenem Betriebssystem.  
+Ein Container teilt sich den Kernel des Host-Systems und ist leichter und schneller.
+
+---
+
+### Wie bekomme ich Informationen zu einem laufenden Docker Container?
+
+**Antwort:**  
+Mit Befehlen wie:
+
+```
+docker ps
+docker inspect <container>
+docker logs <container>
+docker stats
+```
+
+---
+
+### Was ist der Unterschied zwischen einer Docker Registry und einem Repository?
+
+**Antwort:**  
+Eine Registry ist der Server (z.B. Docker Hub).  
+Ein Repository ist eine Sammlung von Image-Versionen innerhalb der Registry.
+
+---
+
+### Wie erstelle ich ein Container Image?
+
+**Antwort:**  
+
+```
+docker build -t image-name .
+```
+
+---
+
+### In welcher Datei steht welche Inhalte sich im Container Image befinden?
+
+**Antwort:**  
+Im Dockerfile.
+
+---
+
+### Der erste Prozess im Container bekommt die Nummer?
+
+**Antwort:**  
+PID 1.
+
+---
+
+### Welche Teile von Docker sind durch Kubernetes obsolet geworden, bzw. sollten nicht mehr verwendet werden?
+
+**Antwort:**  
+Docker Swarm und Docker als Orchestrierungsplattform.
+
+---
+
+### Welche Aussage ist besser (The Twelve-Factor App)?
+
+a) Dockerfile sollten möglichst das Builden (CI) und Ausführen von Services beinhalten  
+b) Das Builden und Ausführen von Services ist strikt zu trennen  
+
+**Antwort:**  
+b) Build und Run sollten strikt getrennt sein (CI/CD-Prinzip).
+
+---
+
+## Docker Hub
+
+### Was ist Docker Hub?
+
+**Antwort:**  
+Eine öffentliche Docker Registry zum Speichern und Verteilen von Images.
+
+---
+
+### Welches sind die Alternativen?
+
+**Antwort:**  
+- GitHub Container Registry  
+- GitLab Container Registry  
+- Azure Container Registry  
+- Amazon ECR  
+- Private Registry
+
+---
+
+### Warum sollte eine eigene Docker Registry im Unternehmen verwendet werden?
+
+**Antwort:**  
+- Sicherheit  
+- Kontrolle über Images  
+- Interne Distribution  
+- Compliance-Anforderungen  
+
+---
+
+### Warum sollten Versionen (Tags) von Images immer angegeben werden?
+
+**Antwort:**  
+Damit reproduzierbare und stabile Deployments gewährleistet sind.
+
+---
+
+### Was ist der Unterschied zwischen docker save/docker load und docker export/docker import?
+
+**Antwort:**  
+docker save/load speichert und lädt komplette Images inkl. History und Tags.  
+docker export/import speichert nur das Dateisystem eines Containers ohne History.
+
+# LB 3 – Docker Hands-on
+
+## Ziel der Aufgabe
+
+- Funktionsfähige Docker-Umgebung auf eigenem Notebook
+- Kombination von Backend und Frontend mittels Docker
+- Eigenen Docker Container mit Dockerfile erstellen
+
+---
+
+# 1. Docker Umgebung funktionsfähig
+
+## Umgebung
+
+- VirtualBox
+- Vagrant
+- Ubuntu 16.04 VM
+- Docker in VM installiert
+
+## VM starten
+
+cd M300/docker  
+vagrant up  
+vagrant ssh  
+
+## Docker testen
+
+docker run hello-world  
+
+Ergebnis:
+- Docker Client funktioniert
+- Docker Daemon läuft
+- Container kann gestartet werden
+
+
+BILD
+
+---
+
+# 2. Backend + Frontend kombinieren
+
+## Verwendete Images
+
+Backend: mysql:5.7  
+Frontend: ghost:1-alpine  
+
+---
+
+## MySQL Container starten
+
+sudo docker run -d --name ghost_mysql \
+  -e MYSQL_ROOT_PASSWORD=admin \
+  -e MYSQL_USER=ghost \
+  -e MYSQL_PASSWORD=secret \
+  -e MYSQL_DATABASE=ghost \
+  --restart=always \
+  mysql:5.7
+
+---
+
+## Ghost Container starten
+
+sudo docker run -d --name ghost \
+  --link ghost_mysql:mysql \
+  -e database__client=mysql \
+  -e database__connection__host=ghost_mysql \
+  -e database__connection__user=ghost \
+  -e database__connection__password=secret \
+  -e database__connection__database=ghost \
+  -p 2368:2368 \
+  --restart=always \
+  ghost:1-alpine
+
+---
+
+## Zugriff im Browser
+
+http://localhost:2368  
+
+Ghost Weboberfläche ist erreichbar.
+
+![alt text](images/ghost.png)
+
+
+---
+
+# 3. Eigener Docker Container (Apache)
+
+## Dockerfile
+
+FROM ubuntu:14.04  
+RUN apt-get update  
+RUN apt-get -q -y install apache2  
+
+ENV APACHE_RUN_USER www-data  
+ENV APACHE_RUN_GROUP www-data  
+ENV APACHE_LOG_DIR /var/log/apache2  
+
+RUN mkdir -p /var/lock/apache2 /var/run/apache2  
+
+EXPOSE 80  
+VOLUME /var/www/html  
+
+CMD /bin/bash -c "source /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND"
+
+---
+
+## Image bauen
+
+docker build -t my-apache:1.0 .  
+
+---
+
+## Container starten
+
+docker run -d --name mywebB -p 8080:80 my-apache:1.0  
+
+---
+
+## Port-Weiterleitung prüfen
+
+vagrant port  
+
+Ergebnis:
+8080 (guest) → 8085 (host)
+
+---
+
+## Zugriff im Browser
+
+http://localhost:8085  
+
+Apache Default Page erscheint.
+
+![alt text](images/apache2.png)
+
+Eigener Docker Container erfolgreich erstellt.
+
+---
+
+# Fazit
+
+Die Docker-Umgebung ist vollständig funktionsfähig.  
+Ein Backend-Container wurde mit einem Frontend-Container kombiniert.  
+Zusätzlich wurde ein eigener Container mittels Dockerfile erstellt, gebaut und erfolgreich ausgeführt. 
