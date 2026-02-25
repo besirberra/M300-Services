@@ -134,8 +134,6 @@
     - [Container starten](#container-starten)
     - [Port-Weiterleitung prüfen](#port-weiterleitung-pr%C3%BCfen)
     - [Zugriff im Browser](#zugriff-im-browser)
-- [Container-Sicherheit](#container-sicherheit)
-    - [Übersicht](#%C3%9Cbersicht)
 - [– Protokollieren & Überwachen](#-protokollieren--%C3%9Cberwachen)
     - [Standard Logging json-file](#standard-logging-json-file)
     - [alt text](#alt-text)
@@ -1311,14 +1309,6 @@ Apache Default Page erscheint.
 ![alt text](images/apache2.png)
 
 Eigener Docker Container erfolgreich erstellt.
-
----
-
-# 35 Container-Sicherheit
-
-## Übersicht
-
-In dieser Aufgabe wurde eine Docker-Umgebung mit Vagrant betrieben und verschiedene Massnahmen zur Protokollierung, Überwachung und Absicherung von Containern umgesetzt und getestet.
 
 ---
 
