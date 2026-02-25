@@ -117,7 +117,37 @@
     - [Container starten](#container-starten)
     - [Port-Weiterleitung prüfen](#port-weiterleitung-pr%C3%BCfen)
     - [Zugriff im Browser](#zugriff-im-browser)
-- [Fazit](#fazit)
+- [Container-Sicherheit](#container-sicherheit)
+    - [Übersicht](#%C3%9Cbersicht)
+- [– Protokollieren & Überwachen](#-protokollieren--%C3%9Cberwachen)
+    - [Standard Logging json-file](#standard-logging-json-file)
+    - [alt text](#alt-text)
+    - [Laufende Logs anzeigen Streaming](#laufende-logs-anzeigen-streaming)
+    - [alt text](#alt-text)
+- [– Monitoring mit cAdvisor](#-monitoring-mit-cadvisor)
+- [– Container sichern & beschränken](#-container-sichern--beschr%C3%A4nken)
+    - [Memory und CPU limitieren](#memory-und-cpu-limitieren)
+    - [Read-Only Filesystem](#read-only-filesystem)
+    - [Capabilities reduzieren Least Privilege](#capabilities-reduzieren-least-privilege)
+- [Sicherheitskonzept Zusammenfassung](#sicherheitskonzept-zusammenfassung)
+- [– Kontinuierliche Integration CI](#-kontinuierliche-integration-ci)
+    - [Jenkins Blue Ocean starten](#jenkins-blue-ocean-starten)
+    - [Jenkins initialisieren](#jenkins-initialisieren)
+    - [Pipeline erstellen](#pipeline-erstellen)
+    - [Build erfolgreich](#build-erfolgreich)
+- [Kubernetes Hands-on](#kubernetes-hands-on)
+    - [Umgebung](#umgebung)
+    - [Namespace erstellen](#namespace-erstellen)
+    - [Apache Pod erstellen](#apache-pod-erstellen)
+    - [Service erstellen](#service-erstellen)
+    - [YAML Dateien exportieren](#yaml-dateien-exportieren)
+    - [Deployment reproduzierbar machen](#deployment-reproduzierbar-machen)
+- [Jenkins Integration CI/CD](#jenkins-integration-cicd)
+    - [Jenkins starten](#jenkins-starten)
+    - [Jenkinsfile](#jenkinsfile)
+- [Fehler & Lösungen](#fehler--l%C3%B6sungen)
+    - [curl konnte Port nicht erreichen](#curl-konnte-port-nicht-erreichen)
+    - [kubectl konnte nicht verbinden](#kubectl-konnte-nicht-verbinden)
 
 <!-- /TOC -->
 ---
@@ -1052,14 +1082,13 @@ vagrant ssh
 ## Docker testen
 
 docker run hello-world  
+![alt text](images/helloworld.png)
 
 Ergebnis:
 - Docker Client funktioniert
 - Docker Daemon läuft
 - Container kann gestartet werden
 
-
-BILD
 
 ---
 
@@ -1164,8 +1193,356 @@ Eigener Docker Container erfolgreich erstellt.
 
 ---
 
-# Fazit
+# 35 Container-Sicherheit
 
-Die Docker-Umgebung ist vollständig funktionsfähig.  
-Ein Backend-Container wurde mit einem Frontend-Container kombiniert.  
-Zusätzlich wurde ein eigener Container mittels Dockerfile erstellt, gebaut und erfolgreich ausgeführt. 
+## Übersicht
+
+In dieser Aufgabe wurde eine Docker-Umgebung mit Vagrant betrieben und verschiedene Massnahmen zur Protokollierung, Überwachung und Absicherung von Containern umgesetzt und getestet.
+
+---
+
+# 01 – Protokollieren & Überwachen
+
+## 1.1 Standard Logging (json-file)
+
+Docker speichert standardmaessig alle Ausgaben von STDOUT und STDERR im JSON-Logformat.
+
+Test:
+
+```bash
+docker run --name logtest ubuntu bash -c 'echo "stdout"; echo "stderr" >&2'
+docker logs logtest
+docker rm logtest
+```
+
+Ergebnis: Die Ausgaben von STDOUT und STDERR konnten mit `docker logs` angezeigt werden.
+
+![alt text](images/log.png)
+---
+
+## 1.2 Laufende Logs anzeigen (Streaming)
+
+Test eines laufenden Containers mit kontinuierlicher Ausgabe:
+
+```bash
+docker run -d --name streamtest ubuntu bash -c 'while true; do echo "tick"; sleep 1; done'
+docker logs streamtest --tail 5
+docker rm -f streamtest
+```
+
+Ergebnis: Die letzten Logeintraege konnten angezeigt werden. Damit ist das Monitoring von Laufzeitausgaben moeglich.
+
+![alt text](images/tick.png)
+---
+
+# 02 – Monitoring mit cAdvisor
+
+Zur Überwachung der Container wurde cAdvisor eingesetzt.
+
+Start des Containers:
+
+```bash
+docker run -d --name cadvisor35 \
+  -p 8080:8080 \
+  -v /:/rootfs:ro \
+  -v /var/run:/var/run:rw \
+  -v /sys:/sys:ro \
+  -v /var/lib/docker/:/var/lib/docker:ro \
+  gcr.io/cadvisor/cadvisor:latest
+```
+
+Zugriff im Browser über:
+
+http://localhost:8085/containers/
+
+Ergebnis:
+- Anzeige aller laufenden Container
+- CPU- und Memory-Auslastung sichtbar
+- Ressourcenverbrauch pro Container nachvollziehbar
+
+![alt text](images/advisor.png)
+
+---
+
+# 03 – Container sichern & beschränken
+
+## 3.1 Memory und CPU limitieren
+
+Zur Verhinderung von DoS-Angriffen wurden Ressourcen beschränkt:
+
+```bash
+docker run -d --name limited --memory=128m --cpus="0.5" nginx:alpine
+docker stats --no-stream limited
+docker rm -f limited
+```
+
+Ergebnis:
+Der Container erhielt begrenzten RAM (128MB) und CPU-Zeit (0.5 CPU).
+
+![alt text](image-2.png)
+
+---
+
+## 3.2 Read-Only Filesystem
+
+Um Schreibzugriffe zu verhindern:
+
+```bash
+docker run --rm --read-only ubuntu touch /testfile
+```
+
+Ergebnis:
+Der Schreibzugriff wurde verweigert. Das Dateisystem ist schreibgeschützt.
+
+---
+
+## 3.3 Capabilities reduzieren (Least Privilege)
+
+```bash
+docker run --rm --cap-drop ALL ubuntu bash -c 'id'
+```
+
+Ergebnis:
+Der Container lief mit reduzierten Linux-Capabilities. Dadurch wird die Angriffsoberflaeche reduziert.
+
+---
+
+# Sicherheitskonzept (Zusammenfassung)
+
+Folgende Sicherheitsmassnahmen wurden umgesetzt:
+
+- Nutzung von Logging über docker logs
+- Monitoring mit cAdvisor
+- Ressourcenbegrenzung (Memory, CPU)
+- Read-Only Filesystem
+- Reduktion von Linux-Capabilities
+- Keine unnoetigen offenen Ports
+
+Diese Massnahmen erhoehen die Stabilitaet und Sicherheit der Containerumgebung und reduzieren das Risiko von DoS-Angriffen oder Container-Breakouts.
+
+---
+
+# 04 – Kontinuierliche Integration (CI)
+
+Zur Umsetzung der Continuous Integration wurde Jenkins mit Blue Ocean verwendet.
+
+## 4.1 Jenkins Blue Ocean starten
+
+Jenkins wurde als Docker-Container gestartet:
+
+```bash
+MSYS_NO_PATHCONV=1 docker run -d --name blueocean -u root \
+  -p 8082:8080 \
+  -v jenkins-data:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkinsci/blueocean
+```
+
+Zugriff im Browser:
+
+http://localhost:8082
+
+![alt text](images/jekins.png)
+
+---
+
+## 4.2 Jenkins initialisieren
+
+- Unlock Jenkins mit initialAdminPassword
+- Suggested Plugins installiert
+- Admin Benutzer erstellt
+
+![alt text](image-4.png)
+
+---
+
+## 4.3 Pipeline erstellen
+
+Blue Ocean wurde geoeffnet und eine neue Pipeline erstellt.
+
+Repository:
+
+https://github.com/mc-b/SCS-ESI
+
+Ergebnis:
+Pipeline wurde automatisch erstellt und gestartet.
+
+---
+
+## 4.4 Build erfolgreich
+
+Die Pipeline führte automatisch:
+
+- Build
+- Docker Image Erstellung
+- Integration
+
+Ergebnis:
+Pipeline erfolgreich (grün)
+
+---
+
+# 6. Kubernetes Hands-on
+
+## Umgebung
+
+- Docker Desktop mit aktiviertem Kubernetes
+- kubectl CLI
+
+Cluster prüfen:
+
+```bash
+kubectl get nodes
+```
+
+Node: `docker-desktop` → Status `Ready`
+
+---
+
+## Namespace erstellen
+
+```bash
+kubectl create namespace test
+```
+
+---
+
+## Apache Pod erstellen
+
+```bash
+kubectl run apache --image=httpd --restart=Never --namespace test
+```
+
+---
+
+## Service erstellen
+
+```bash
+kubectl expose pod/apache --type=LoadBalancer --port=80 --namespace test
+```
+
+---
+
+## YAML Dateien exportieren
+
+```bash
+kubectl get pod apache -n test -o yaml > apache-pod.yaml
+kubectl get svc apache -n test -o yaml > apache-service.yaml
+```
+
+Nicht benötigte Felder entfernt:
+- status
+- metadata.resourceVersion
+- metadata.uid
+- metadata.creationTimestamp
+- metadata.managedFields
+
+---
+
+## Deployment reproduzierbar machen
+
+```bash
+kubectl delete namespace test
+kubectl create namespace yaml
+kubectl apply -f apache-pod.yaml -n yaml
+kubectl apply -f apache-service.yaml -n yaml
+```
+
+Deployment erfolgreich reproduzierbar.
+
+---
+
+# 7. Jenkins Integration (CI/CD)
+
+## Jenkins starten
+
+```bash
+docker run -d --name jenkins \
+  -p 8081:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  jenkins/jenkins:lts
+```
+
+```bash
+docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+---
+
+## Jenkinsfile
+
+```groovy
+pipeline {
+  agent any
+
+  stages {
+    stage('Check Cluster') {
+      steps {
+        sh 'kubectl get nodes'
+      }
+    }
+
+    stage('Deploy Apache') {
+      steps {
+        sh 'kubectl create namespace ci-demo || true'
+        sh 'kubectl apply -f apache-pod.yaml -n ci-demo'
+        sh 'kubectl apply -f apache-service.yaml -n ci-demo'
+      }
+    }
+
+    stage('Verify Deployment') {
+      steps {
+        sh 'kubectl get pods -n ci-demo'
+        sh 'kubectl get svc -n ci-demo'
+      }
+    }
+  }
+
+  post {
+    always {
+      sh 'kubectl delete namespace ci-demo || true'
+    }
+  }
+}
+```
+
+Ergebnis:
+- Jenkins verbindet sich mit Kubernetes
+- Deployment erfolgt automatisiert
+- Status wird geprüft
+- Namespace wird nach Abschluss gelöscht
+
+---
+
+# Fehler & Lösungen
+
+## curl konnte Port nicht erreichen
+
+Fehlermeldung:
+
+```
+curl: Failed to connect to localhost port 8080
+```
+
+Lösung:
+
+```bash
+curl -4 -I http://127.0.0.1:8080
+```
+
+Ursache:
+Windows / Git-Bash IPv6 Problem.
+
+---
+
+## kubectl konnte nicht verbinden
+
+Fehlermeldung:
+
+```
+Unable to connect to the server
+```
+
+Lösung:
+Kubernetes in Docker Desktop aktiviert.
+
