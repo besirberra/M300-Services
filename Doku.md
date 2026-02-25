@@ -5,6 +5,9 @@
 
 - [M300 – Plattformübergreifende Dienste in ein Netzwerk integrieren](#m300--plattform%C3%BCbergreifende-dienste-in-ein-netzwerk-integrieren)
         - [Inhaltsverzeichnis](#inhaltsverzeichnis)
+- [Fehler & Lösungen](#fehler--l%C3%B6sungen)
+    - [curl konnte Port nicht erreichen](#curl-konnte-port-nicht-erreichen)
+    - [kubectl konnte nicht verbinden](#kubectl-konnte-nicht-verbinden)
 - [-Toolumgebung](#-toolumgebung)
 - [GitHub Account erstellen](#github-account-erstellen)
     - [Repository erstellen](#repository-erstellen)
@@ -106,7 +109,6 @@
     - [Ziel der Aufgabe](#ziel-der-aufgabe)
 - [-Sicherheit](#-sicherheit)
 - [Protokollieren & Überwachen Fragen](#protokollieren--%C3%9Cberwachen-fragen)
-- [Protokollieren & Überwachen](#protokollieren--%C3%9Cberwachen)
     - [Warum sollten Container überwacht werden?](#warum-sollten-container-%C3%BCberwacht-werden)
     - [Was ist das syslog und wo ist es zu finden?](#was-ist-das-syslog-und-wo-ist-es-zu-finden)
     - [Was ist stdout, stderr, stdin?](#was-ist-stdout-stderr-stdin)
@@ -161,9 +163,6 @@
 - [Jenkins Integration CI/CD](#jenkins-integration-cicd)
     - [Jenkins starten](#jenkins-starten)
     - [Jenkinsfile](#jenkinsfile)
-- [Fehler & Lösungen](#fehler--l%C3%B6sungen)
-    - [curl konnte Port nicht erreichen](#curl-konnte-port-nicht-erreichen)
-    - [kubectl konnte nicht verbinden](#kubectl-konnte-nicht-verbinden)
 
 <!-- /TOC -->
 ---
@@ -1093,10 +1092,6 @@ docker export/import speichert nur das Dateisystem eines Containers ohne History
 ---
 
 # Protokollieren & Überwachen Fragen
-
----
-
-# Protokollieren & Überwachen
 
 ## Warum sollten Container überwacht werden?
 
