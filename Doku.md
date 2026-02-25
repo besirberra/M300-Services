@@ -29,6 +29,7 @@
     - [Dateien exkludieren](#dateien-exkludieren)
     - [Repository hinzufügen & pushen](#repository-hinzuf%C3%BCgen--pushen)
     - [alt text](#alt-text)
+- [-Infrastruktur-Automatisierung](#-infrastruktur-automatisierung)
 - [Theoriefragen – Cloud & Vagrant](#theoriefragen--cloud--vagrant)
     - [Cloud Computing](#cloud-computing)
         - [Was versteht man unter Cloud-Computing?](#was-versteht-man-unter-cloud-computing)
@@ -56,7 +57,7 @@
     - [Provisionierung Automatisierte Installation](#provisionierung-automatisierte-installation)
     - [Sicherheit](#sicherheit)
     - [Fazit](#fazit)
-- [M300 – Docker Projekt](#m300--docker-projekt)
+- [-Projekte](#-projekte)
     - [Mini-Helpdesk mit Monitoring](#mini-helpdesk-mit-monitoring)
     - [Zweck des gewählten Service](#zweck-des-gew%C3%A4hlten-service)
     - [Aufbau und logische Struktur des Projekts](#aufbau-und-logische-struktur-des-projekts)
@@ -76,6 +77,7 @@
         - [Fehler 1 – MySQL Connection refused](#fehler-1--mysql-connection-refused)
     - [Projektstruktur](#projektstruktur)
     - [Fazit](#fazit)
+- [-Container](#-container)
 - [Theoriefragen – Container & Docker](#theoriefragen--container--docker)
     - [Container](#container)
         - [Was ist der Unterschied zwischen Vagrant und Docker?](#was-ist-der-unterschied-zwischen-vagrant-und-docker)
@@ -102,6 +104,21 @@
         - [Was ist der Unterschied zwischen docker save/docker load und docker export/docker import?](#was-ist-der-unterschied-zwischen-docker-savedocker-load-und-docker-exportdocker-import)
 - [LB 3 – Docker Hands-on](#lb-3--docker-hands-on)
     - [Ziel der Aufgabe](#ziel-der-aufgabe)
+- [-Sicherheit](#-sicherheit)
+- [Protokollieren & Überwachen Fragen](#protokollieren--%C3%9Cberwachen-fragen)
+- [Protokollieren & Überwachen](#protokollieren--%C3%9Cberwachen)
+    - [Warum sollten Container überwacht werden?](#warum-sollten-container-%C3%BCberwacht-werden)
+    - [Was ist das syslog und wo ist es zu finden?](#was-ist-das-syslog-und-wo-ist-es-zu-finden)
+    - [Was ist stdout, stderr, stdin?](#was-ist-stdout-stderr-stdin)
+- [Container sichern & beschränken](#container-sichern--beschr%C3%A4nken)
+    - [Wie kann docker run -v /:/homeroot -it ubuntu bash durch normale User verhindert werden?](#wie-kann-docker-run--v-homeroot--it-ubuntu-bash-durch-normale-user-verhindert-werden)
+    - [Wie können verschiedene Mandanten getrennt werden?](#wie-k%C3%B6nnen-verschiedene-mandanten-getrennt-werden)
+    - [Wie kann der Ressourcenverbrauch von Containern eingeschränkt werden?](#wie-kann-der-ressourcenverbrauch-von-containern-eingeschr%C3%A4nkt-werden)
+- [Kontinuierliche Integration](#kontinuierliche-integration)
+    - [Welche Funktionen kann Jenkins übernehmen?](#welche-funktionen-kann-jenkins-%C3%BCbernehmen)
+    - [Wie baut man Modultests?](#wie-baut-man-modultests)
+    - [Wie anders, als manuell oder zeitgesteuert, könnten Jenkins Jobs gestartet werden?](#wie-anders-als-manuell-oder-zeitgesteuert-k%C3%B6nnten-jenkins-jobs-gestartet-werden)
+- [-Container-Sicherheit](#-container-sicherheit)
 - [Docker Umgebung funktionsfähig](#docker-umgebung-funktionsf%C3%A4hig)
     - [Umgebung](#umgebung)
     - [VM starten](#vm-starten)
@@ -133,6 +150,7 @@
 - [– Kontinuierliche Integration CI](#-kontinuierliche-integration-ci)
     - [Jenkins Blue Ocean starten](#jenkins-blue-ocean-starten)
     - [Jenkins initialisieren](#jenkins-initialisieren)
+    - [alt text](#alt-text)
     - [Pipeline erstellen](#pipeline-erstellen)
     - [Build erfolgreich](#build-erfolgreich)
 - [Kubernetes Hands-on](#kubernetes-hands-on)
@@ -412,6 +430,10 @@ In der settings.json wurde folgender Abschnitt ergänzt:
 ![alt text](images/Bild8.png)
 ---
 
+# 20-Infrastruktur-Automatisierung
+
+---
+
 # Theoriefragen – Cloud & Vagrant
 
 ## Cloud Computing
@@ -500,7 +522,7 @@ Da Virtualisierung, Automatisierung und Infrastrukturverwaltung dort relevante T
 
 ---
 
-# LB2 – Hands-on: Automatisierung mit Vagrant
+# 25 LB2 – Hands-on: Automatisierung mit Vagrant
 
 ## Ziel
 
@@ -635,8 +657,10 @@ Mit dieser Übung habe ich:
 Die Bereitstellung erfolgt nun vollständig automatisiert und reproduzierbar über das Vagrantfile.
 
 ---
+# 50-Projekte
 
-# M300 – Docker Projekt  
+---
+
 ## Mini-Helpdesk mit Monitoring
 
 ---
@@ -878,6 +902,9 @@ Monitoring:
 http://localhost:8090  
 
 ---
+# 30-Container
+
+---
 
 # Theoriefragen – Container & Docker
 
@@ -1061,6 +1088,100 @@ docker export/import speichert nur das Dateisystem eines Containers ohne History
 - Funktionsfähige Docker-Umgebung auf eigenem Notebook
 - Kombination von Backend und Frontend mittels Docker
 - Eigenen Docker Container mit Dockerfile erstellen
+
+---
+# 35-Sicherheit
+
+---
+
+# Protokollieren & Überwachen Fragen
+
+---
+
+# Protokollieren & Überwachen
+
+## Warum sollten Container überwacht werden?
+
+Container sollten überwacht werden, um frühzeitig Probleme wie hohe CPU- oder RAM-Auslastung, Abstürze oder Performance-Probleme zu erkennen. Monitoring erhöht Stabilität und Verfügbarkeit.
+
+---
+
+## Was ist das syslog und wo ist es zu finden?
+
+Syslog ist ein zentrales Log-System für System- und Dienstmeldungen.  
+Unter Linux befindet es sich typischerweise unter:
+
+/var/log/syslog
+
+---
+
+## Was ist stdout, stderr, stdin?
+
+- stdin = Standard Input (Eingabe)
+- stdout = Standard Output (normale Ausgabe)
+- stderr = Standard Error (Fehlermeldungen)
+
+Docker speichert stdout und stderr automatisch in Logs.
+
+---
+
+# Container sichern & beschränken
+
+## Wie kann `docker run -v /:/homeroot -it ubuntu bash` durch normale User verhindert werden?
+
+Indem nur Administratoren Zugriff auf den Docker-Daemon erhalten.  
+Mitglieder der Docker-Gruppe besitzen Root-Rechte und sollten daher eingeschränkt werden.
+
+---
+
+## Wie können verschiedene Mandanten getrennt werden?
+
+Durch getrennte Docker-Hosts oder VMs pro Mandant.  
+So wird verhindert, dass ein Container-Breakout andere Mandanten betrifft.
+
+---
+
+## Wie kann der Ressourcenverbrauch von Containern eingeschränkt werden?
+
+Durch Limits beim Start:
+
+- Memory: `--memory`
+- CPU: `--cpus`
+- ulimits
+- Read-only Filesystem
+
+---
+
+# Kontinuierliche Integration
+
+## Welche Funktionen kann Jenkins übernehmen?
+
+- Automatisches Bauen von Software
+- Ausführen von Tests
+- Erstellen von Docker Images
+- Deployment
+- Reporting
+
+---
+
+## Wie baut man Modultests?
+
+Modultests werden als automatisierte Unit-Tests geschrieben (z.B. mit Testframeworks).  
+Sie testen einzelne Komponenten isoliert.
+
+---
+
+## Wie anders, als manuell oder zeitgesteuert, könnten Jenkins Jobs gestartet werden?
+
+Durch:
+
+- Git Commit (Webhook)
+- Push in ein Repository
+- Pull Request
+- API Trigger
+
+---
+# 35-Container-Sicherheit
 
 ---
 
@@ -1354,6 +1475,7 @@ http://localhost:8082
 
 ![alt text](image-4.png)
 
+![alt text](image-5.png)
 ---
 
 ## 4.3 Pipeline erstellen
